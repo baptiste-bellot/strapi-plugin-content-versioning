@@ -70,7 +70,7 @@ index 6701309..393f616 100644
    const onPost = useCallback(
      async (body, trackerProperty) => {
 -      const endPoint = `${getRequestUrl(`collection-types/${slug}`)}${rawQuery}`;
-+      const endPoint = hasVersions ?  `/content-versioning/${slug}/save` : `${getRequestUrl(`collection-types/${slug}`)}${rawQuery}`;
++      const endPoint = hasVersions ?  `/content-versioning/${slug}/save${rawQuery}`` : `${getRequestUrl(`collection-types/${slug}`)}${rawQuery}`;
 
        try {
          // Show a loading button in the EditView/Header.js && lock the app => no navigation
@@ -80,9 +80,7 @@ index 6701309..393f616 100644
 
 -        replace(`/content-manager/collectionType/${slug}/${data.id}${rawQuery}`);
 +        if (hasVersions) {
-+          replace({
-+            pathname: `/content-manager/collectionType/${slug}/${data.id}`,
-+          });
++          replace(`/content-manager/collectionType/${slug}/${data.id}${rawQuery}`);
 +        } else {
 +          replace(`/content-manager/collectionType/${slug}/${data.id}${rawQuery}`);
 +        }
@@ -95,7 +93,7 @@ index 6701309..393f616 100644
      async (body, trackerProperty) => {
 -      const endPoint = getRequestUrl(`collection-types/${slug}/${id}`);
 +
-+      const endPoint = hasVersions ?  `/content-versioning/${slug}/save` : getRequestUrl(`collection-types/${slug}/${id}`);
++      const endPoint = hasVersions ?  `/content-versioning/${slug}/save${rawQuery}` : getRequestUrl(`collection-types/${slug}/${id}`);
 
        try {
          trackUsageRef.current('willEditEntry', trackerProperty);
@@ -113,9 +111,7 @@ index 6701309..393f616 100644
          dispatch(setStatus('resolved'));
 +
 +        if (hasVersions) {
-+          replace({
-+            pathname: `/content-manager/collectionType/${slug}/${data.id}`,
-+          });
++          replace(`/content-manager/collectionType/${slug}/${data.id}${rawQuery}`);
 +        }
        } catch (err) {
          trackUsageRef.current('didNotEditEntry', { error: err, trackerProperty });

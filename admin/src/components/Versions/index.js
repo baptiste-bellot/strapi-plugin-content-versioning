@@ -16,7 +16,7 @@ import {
 import { Button } from "@strapi/design-system/Button";
 import moment from "moment";
 
-import { request } from "@strapi/helper-plugin";
+import { request, useQueryParams } from "@strapi/helper-plugin";
 
 import { getTrad } from "../../utils";
 
@@ -38,6 +38,7 @@ const Versions = () => {
     return null;
   }
 
+  const [{ rawQuery }] = useQueryParams();
   const [data, setData] = useState([]);
   const [publishedVersion, setPublishedVersion] = useState(undefined);
 
@@ -85,12 +86,9 @@ const Versions = () => {
       }
 
       const selectedVersion = data.find((v) => v.versionNumber === value);
-
-      push({
-        pathname: `/content-manager/collectionType/${slug}/${selectedVersion.id}`,
-      });
+      replace(`/content-manager/collectionType/${slug}/${selectedVersion.id}${rawQuery}`);
     },
-    [data, push, slug]
+    [data, replace, slug]
   );
 
   const onSaveClick = useCallback(async () => {
@@ -105,14 +103,12 @@ const Versions = () => {
     } = modifiedData;
 
     try {
-      const result = await request(`/content-versioning/${slug}/save`, {
+      const result = await request(`/content-versioning/${slug}/save${rawQuery}`, {
         method: "POST",
         body: newData,
       });
 
-      replace({
-        pathname: `/content-manager/collectionType/${slug}/${result.id}`,
-      });
+      replace(`/content-manager/collectionType/${slug}/${result.id}${rawQuery}`);
     } catch (e) {
       const name = _.get(e, "response.payload.error.name");
       const message = _.get(e, "response.payload.error.message");
