@@ -58,7 +58,7 @@ module.exports = {
                 localizedVersions[v.locale].push(v);
             }
         });
-        currentLocalVersions = localizedVersions[data.locale];
+        currentLocalVersions = localizedVersions[data.locale] ?? [];
       }
 
       const latestVersion = _.maxBy(currentLocalVersions, (v) => v.versionNumber);
